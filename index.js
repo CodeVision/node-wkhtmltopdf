@@ -38,7 +38,7 @@ function wkhtmltopdf(input, options, callback) {
     var tocArgs = ['disableDottedLines', 'tocHeaderText', 'tocLevelIndentation', 'disableTocLinks', 'tocTextSizeShrink', 'xslStyleSheet'];
     var myTocArgs = [];
     keys = keys.filter(function(key){
-      if (tocArgs.find(function(tkey){ return tkey === key })) {
+      if (tocArgs.find(function(tkey) { return tkey === key; } )) {
         myTocArgs.push(key);
         return false;
       }
@@ -94,15 +94,16 @@ function wkhtmltopdf(input, options, callback) {
     console.log('[node-wkhtmltopdf] [debug] [command] ' + args.join(' '));
   }
 
+  var child;
   if (process.platform === 'win32') {
-    var child = spawn(args[0], args.slice(1));
+    child = spawn(args[0], args.slice(1));
   } else if (process.platform === 'darwin') {
-    var child = spawn('/bin/sh', ['-c', args.join(' ') + ' | cat ; exit ${PIPESTATUS[0]}']);
+    child = spawn('/bin/sh', ['-c', args.join(' ') + ' | cat ; exit ${PIPESTATUS[0]}']);
   } else {
     // this nasty business prevents piping problems on linux
     // The return code should be that of wkhtmltopdf and not of cat
     // http://stackoverflow.com/a/18295541/1705056
-    var child = spawn(wkhtmltopdf.shell, ['-c', args.join(' ') + ' | cat ; exit ${PIPESTATUS[0]}']);
+    child = spawn(wkhtmltopdf.shell, ['-c', args.join(' ') + ' | cat ; exit ${PIPESTATUS[0]}']);
   }
 
   var stream = child.stdout;
