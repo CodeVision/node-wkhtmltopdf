@@ -44,6 +44,17 @@ describe('wkhtmltopdf', function() {
     });
   });
 
+  describe('when input is an array', function() {
+    it('should use it as multiple inputs', function(done) {
+      var output = Fs.createWriteStream(resultPath('multiInputSpec.pdf'));
+      Wkhtmltopdf([fixtureFileUri('validFile.html'), fixtureFileUri('validFile.html')]).pipe(output);
+      output.on('finish', function() {
+        checkResults('multiInputSpec.pdf', 'validFile.pdf');
+        done();
+      });
+    });
+  });
+
   describe('when input starts with http://', function() {
     var server;
 
@@ -109,5 +120,6 @@ describe('wkhtmltopdf', function() {
       });
     });
   });
+
 
 });
